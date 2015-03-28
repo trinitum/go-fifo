@@ -1,0 +1,3 @@
+Package fifo implements FIFO buffer. You can push items into buffer,
+shift items from it, or you can read arbitrary items in the buffer.
+Buffer automatically grows when required.
