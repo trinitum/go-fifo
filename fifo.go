@@ -61,13 +61,23 @@ func (buf *FIFO) Shift() interface{} {
 	return item
 }
 
-// Item returns specified item from the buffer.
-// If the index is out of range it returns nil.
+// Item returns specified item from the buffer. First item has index 0,
+// if index is negative, then it is counted from the end, e.g. -1 is
+// the last item. If the index is out of range it returns nil.
 func (buf *FIFO) Item(idx int) interface{} {
-	if idx >= buf.length {
-		return nil
+	if idx >= 0 {
+		if idx >= buf.length {
+			return nil
+		} else {
+			return buf.items[(buf.start+idx)%len(buf.items)]
+		}
+	} else {
+		if idx < -buf.length {
+			return nil
+		} else {
+			return buf.items[(buf.start+buf.length+idx)%len(buf.items)]
+		}
 	}
-	return buf.items[(buf.start+idx)%len(buf.items)]
 }
 
 // Len returns the number of items in the buffer.
