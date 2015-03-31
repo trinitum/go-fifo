@@ -60,7 +60,11 @@ func TestGrowing(t *testing.T) {
 
 func checkItem(t *testing.T, idx int, expect int, fifo *FIFO) {
 	res := fifo.Item(idx)
-	if res.(int) != expect {
+	if res == nil {
+		if expect != 0 {
+			t.Errorf("Expected item %d to be nil, but got %d", idx, res.(int))
+		}
+	} else if res.(int) != expect {
 		t.Errorf("Expected item %d to be %d, but got %d", idx, expect, res.(int))
 	}
 }
@@ -72,4 +76,21 @@ func TestUninitialized(t *testing.T) {
 	checkLength(t, 2, fifo)
 	checkItem(t, 0, 9, fifo)
 	checkItem(t, 1, 8, fifo)
+}
+
+func TestItem(t *testing.T) {
+	fifo := New(5)
+	for i := 1; i <= 5; i++ {
+		fifo.Push(i)
+	}
+	fifo.Shift()
+	fifo.Shift()
+	fifo.Push(6)
+	// Now it contains 6,nil,3,4,5
+	checkItem(t, -1, 6, fifo)
+	checkItem(t, -3, 4, fifo)
+	checkItem(t, -5, 0, fifo)
+	checkItem(t, -6, 0, fifo)
+	checkItem(t, 2, 5, fifo)
+	checkItem(t, 5, 0, fifo)
 }
