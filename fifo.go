@@ -85,6 +85,16 @@ func (buf *FIFO) Len() int {
 	return buf.length
 }
 
+// ForEach executes given function for every item in the buffer. The item is
+// passed as the only argument to this function.
+func (buf *FIFO) ForEach(f func(i interface{})) {
+	pos := buf.start
+	for i := 0; i < buf.length; i++ {
+		f(buf.items[pos])
+		pos = (pos + 1) % len(buf.items)
+	}
+}
+
 func min(a, b int) int {
 	if a > b {
 		return b

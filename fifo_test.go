@@ -94,3 +94,16 @@ func TestItem(t *testing.T) {
 	checkItem(t, 2, 5, fifo)
 	checkItem(t, 5, 0, fifo)
 }
+
+func TestForEach(t *testing.T) {
+	fifo := New(5)
+	for i := 1; i < 6; i++ {
+		fifo.Push(i)
+	}
+	fifo.Shift()
+	var sum int
+	fifo.ForEach(func(e interface{}) { sum += e.(int) })
+	if sum != 14 {
+		t.Errorf("Expected sum to be 14, but it is %d", sum)
+	}
+}
