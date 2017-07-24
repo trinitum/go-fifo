@@ -3,6 +3,7 @@
 // Buffer automatically grows when required.
 package fifo
 
+// FIFO is the structure that represents buffer
 type FIFO struct {
 	items  []interface{}
 	start  int
@@ -68,16 +69,13 @@ func (buf *FIFO) Item(idx int) interface{} {
 	if idx >= 0 {
 		if idx >= buf.length {
 			return nil
-		} else {
-			return buf.items[(buf.start+idx)%len(buf.items)]
 		}
-	} else {
-		if idx < -buf.length {
-			return nil
-		} else {
-			return buf.items[(buf.start+buf.length+idx)%len(buf.items)]
-		}
+		return buf.items[(buf.start+idx)%len(buf.items)]
 	}
+	if idx < -buf.length {
+		return nil
+	}
+	return buf.items[(buf.start+buf.length+idx)%len(buf.items)]
 }
 
 // Len returns the number of items in the buffer.
